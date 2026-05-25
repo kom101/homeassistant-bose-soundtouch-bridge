@@ -33,6 +33,8 @@ The bridge can be configured in two ways:
 ### Using Presets as Generic Triggers (Simple Example)
 Since version 1.8.1, the bridge always reports button presses to Home Assistant, even if no `preset_N_url` is configured. This allows you to use physical buttons on your Bose speaker to trigger any automation.
 
+Since version 1.8.3, the bridge also captures supplemental remote control events such as `PLAY`, `PAUSE`, `NEXT_TRACK`, `PREV_TRACK`, `THUMBS_UP`, and `THUMBS_DOWN`, publishing them via MQTT as `last_button` and `last_button_time`.
+
 **Example: Play Music Assistant Playlist on Preset 1**
 1. Leave `preset_1_url` empty in the Add-on configuration.
 2. Create an automation in Home Assistant:

@@ -3,6 +3,7 @@ import unittest
 from bose_bridge.helpers import (
     _clean_url,
     _parse_ws_preset_id,
+    _parse_ws_button_event,
     build_didl,
     apply_preset_meta_overrides,
 )
@@ -31,6 +32,14 @@ class TestHelpers(unittest.TestCase):
 
     def test_parse_ws_preset_id_returns_none_for_invalid(self):
         self.assertIsNone(_parse_ws_preset_id("<updates></updates>"))
+
+    def test_parse_ws_button_event_from_key_notification(self):
+        xml = '<updates><key state="press" sender="Remote">PLAY</key></updates>'
+        self.assertEqual(_parse_ws_button_event(xml), "PLAY")
+
+    def test_parse_ws_button_event_from_play_status(self):
+        xml = '<updates><nowPlayingUpdated><nowPlaying><playStatus>PAUSE_STATE</playStatus></nowPlaying></nowPlayingUpdated></updates>'
+        self.assertEqual(_parse_ws_button_event(xml), "PAUSE")
 
     def test_build_didl_includes_title_and_url(self):
         xml = build_didl("http://stream.test/audio.mp3", {"name": "Test Station", "favicon": "http://icon.test/logo.png"})

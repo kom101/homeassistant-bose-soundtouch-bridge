@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.3
+
+- **Remote button capture**: Added support for extra SoundTouch remote events such as `PLAY`, `PAUSE`, `NEXT_TRACK`, `PREV_TRACK`, `THUMBS_UP`, and `THUMBS_DOWN`, exposed via MQTT as `last_button` and `last_button_time`.
+
 ## 1.8.2
 
 - **Improved Button Reliability**: Added a state reset (1s delay) for `last_preset` sensor. This ensures that pressing the same physical button multiple times in a row will always trigger Home Assistant automations.

@@ -64,7 +64,8 @@ def _parse_ws_preset_id(xml_str: str) -> int | None:
                 if preset is not None and preset.get("id"):
                     try:
                         pid = int(preset.get("id"))
-                        if pid > 0: return pid
+                        if pid > 0:
+                            return pid
                     except ValueError:
                         pass
     
@@ -72,6 +73,31 @@ def _parse_ws_preset_id(xml_str: str) -> int | None:
     m = re.search(r'<nowSelectionUpdated>.*?<preset id="([1-6])"', xml_str, re.DOTALL)
     if m:
         return int(m.group(1))
+    return None
+
+
+def _parse_ws_button_event(xml_str: str) -> str | None:
+    """Extract a generic remote button event from WebSocket messages."""
+    root = _parse_xml(xml_str)
+    if root is None:
+        return None
+
+    # Direct key notifications may contain <key state="press">PLAY</key>
+    for element in root.iter():
+        if element.tag.split("}")[-1] == "key":
+            key_text = element.text.strip() if element.text else ""
+            if key_text:
+                return key_text.upper()
+
+    # Play/Pause and playback state changes are often sent as nowPlayingUpdated.
+    for update in root.iter():
+        if update.tag.split("}")[-1] == "nowPlayingUpdated":
+            play_status = _find_first_text(update, "playStatus")
+            if play_status:
+                status = play_status.strip().upper()
+                if status.endswith("_STATE"):
+                    return status[: status.rfind("_STATE")]
+                return status
     return None
 
 def _infer_mime_type(url: str) -> str:

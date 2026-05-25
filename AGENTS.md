@@ -15,7 +15,7 @@ Home Assistant add-on that revives physical preset buttons on Bose SoundTouch sp
 - `bose_bridge/mqtt.py` — MQTT publisher + HA discovery configs
 - `bose_bridge/metadata.py` — station name/favicon lookup via radio-browser.info
 - `bose_bridge/constants.py` — centralized constants and custom exceptions (`BoseError`, `BoseConnectionError`, `NoURLAvailable`)
-- `bose_bridge/config.yaml` — HA add-on configuration schema (v1.8.2)
+- `bose_bridge/config.yaml` — HA add-on configuration schema (v1.8.3)
 - `run.sh` — Supervisor container entrypoint (executes `/bridge.py`)
 - `Dockerfile` — Supervisor deployment (uses `ghcr.io/home-assistant/${BUILD_ARCH}-base:latest`)
 - `Dockerfile.standalone` — standalone Docker (published to GHCR)
