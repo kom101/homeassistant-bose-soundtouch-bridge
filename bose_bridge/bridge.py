@@ -17,7 +17,6 @@ from bose_bridge.discovery import (
 )
 from bose_bridge.helpers import (
     _parse_ws_preset_id,
-    _parse_ws_button_event,
     apply_preset_meta_overrides,
     build_didl,
 )
@@ -59,13 +58,13 @@ class SpeakerBridge:
         topic = f"bose_bridge/{self.device_id}/{key}"
         self.mqtt_pub.publish(topic, value)
         
-        # If it's a button event, publish an empty value shortly after
-        # so Home Assistant can re-trigger automations on repeated presses.
-        if key in {"last_preset", "last_button"} and value != "":
-            def reset_button():
+        # If it's a preset button, publish an empty value shortly after 
+        # to ensure the next press of the same button triggers HA again.
+        if key == "last_preset" and value != "":
+            def reset_preset():
                 time.sleep(1)
                 self.mqtt_pub.publish(topic, "")
-            threading.Thread(target=reset_button, daemon=True).start()
+            threading.Thread(target=reset_preset, daemon=True).start()
 
     def _play_preset(self, n: int):
         try:
@@ -108,13 +107,6 @@ class SpeakerBridge:
         if preset_id:
             print(f"[{self.host}] physical preset button {preset_id} detected")
             self._play_preset(preset_id)
-            return
-
-        button_event = _parse_ws_button_event(message)
-        if button_event:
-            print(f"[{self.host}] remote button event {button_event} detected")
-            self._update_ha_status("last_button", button_event)
-            self._update_ha_status("last_button_time", datetime.now().isoformat())
 
     def _on_error(self, ws, error):
         print(f"[{self.host}] ws error: {error}")

@@ -82,7 +82,7 @@ class TestMqtt(unittest.TestCase):
 
         publish_discovery(client, device_id, friendly, model, presets, availability_topic)
 
-        self.assertEqual(client.publish.call_count, 12)
+        self.assertEqual(client.publish.call_count, 10)
         expected_topics = {
             f"homeassistant/button/bose_{device_id}_preset_1/config",
             f"homeassistant/button/bose_{device_id}_preset_2/config",
@@ -90,8 +90,6 @@ class TestMqtt(unittest.TestCase):
             f"homeassistant/binary_sensor/bose_{device_id}_ws_connected/config",
             f"homeassistant/sensor/bose_{device_id}_last_preset/config",
             f"homeassistant/sensor/bose_{device_id}_last_preset_time/config",
-            f"homeassistant/sensor/bose_{device_id}_last_button/config",
-            f"homeassistant/sensor/bose_{device_id}_last_button_time/config",
         }
         actual_topics = {call.args[0] for call in client.publish.call_args_list}
         self.assertTrue(expected_topics.issubset(actual_topics))

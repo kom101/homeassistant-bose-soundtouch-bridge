@@ -1,15 +1,11 @@
 # Home Assistant: Bose SoundTouch Bridge
 
-Latest release: **1.8.3**
+Latest release: **1.8.2**
 
 A Home Assistant add-on repository that revives the **physical preset
 buttons** on Bose SoundTouch speakers after the **Bose cloud retirement
 (2026)** broke TuneIn presets, the SoundTouch app, and most cloud
 sources.
-
-It also captures additional remote control events such as PLAY, PAUSE,
-NEXT_TRACK, PREV_TRACK, THUMBS_UP, and THUMBS_DOWN and publishes them to
-Home Assistant via MQTT.
 
 The add-on listens to the speaker's local WebSocket and, when you press
 a preset button, plays the URL you configured for that slot via local

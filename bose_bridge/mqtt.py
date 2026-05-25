@@ -134,34 +134,6 @@ def publish_discovery(
     }
     client.publish(f"homeassistant/sensor/{last_time_unique}/config", json.dumps(last_time_cfg), qos=1, retain=True)
 
-    last_button_unique = f"bose_{device_id}_last_button"
-    last_button_cfg = {
-        "name": "Last Button",
-        "unique_id": last_button_unique,
-        "object_id": last_button_unique,
-        "state_topic": f"{base}/last_button",
-        "icon": "mdi:gesture-tap-button",
-        "device": device,
-        "availability_topic": availability_topic,
-        "payload_available": "online",
-        "payload_not_available": "offline",
-    }
-    client.publish(f"homeassistant/sensor/{last_button_unique}/config", json.dumps(last_button_cfg), qos=1, retain=True)
-
-    last_button_time_unique = f"bose_{device_id}_last_button_time"
-    last_button_time_cfg = {
-        "name": "Last Button Time",
-        "unique_id": last_button_time_unique,
-        "object_id": last_button_time_unique,
-        "state_topic": f"{base}/last_button_time",
-        "device_class": "timestamp",
-        "device": device,
-        "availability_topic": availability_topic,
-        "payload_available": "online",
-        "payload_not_available": "offline",
-    }
-    client.publish(f"homeassistant/sensor/{last_button_time_unique}/config", json.dumps(last_button_time_cfg), qos=1, retain=True)
-
     last_error_unique = f"bose_{device_id}_last_error"
     last_error_cfg = {
         "name": "Last Error",
