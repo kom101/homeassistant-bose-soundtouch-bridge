@@ -1,5 +1,41 @@
 # Changelog
 
+## 1.8.4
+
+- **Properly fix the add-on build failure (#7).** Bumped `upnpclient`
+  from `1.0.3` to `2.0.3`. The old version pinned `lxml<5`, which forced
+  pip to compile lxml 4.9.4 from source on the current HA base image
+  (Python 3.14, no C toolchain) and failed. `upnpclient 2.0.3` allows
+  `lxml>=4.6.0`, so the prebuilt `py3-lxml` from apk satisfies it — no
+  compilation, no build tools, fast builds on ARM. This supersedes the
+  build-deps workaround from 1.8.3 (now removed from both Dockerfiles).
+- **Support speakers that don't serve the description at the default
+  path (#4).** Some models (e.g. SoundTouch 10) return 404 for the
+  conventional `/XD/BO5EBO5E-F00D-F00D-FEED-<deviceID>.xml` URL. When
+  that happens the bridge now falls back to locating the UPnP
+  MediaRenderer description over SSDP and uses the one that actually
+  exposes AVTransport. The fast path is unchanged for models that work.
+
+## 1.8.3
+
+- **Fix add-on build failure** reported by a user on the latest Home
+  Assistant base image. `py3-lxml` from apk doesn't always satisfy
+  `upnpclient`'s lxml version pin, so pip falls back to compiling lxml
+  from source — which needs a C toolchain that wasn't in the image. The
+  add-on Dockerfile now installs `gcc`, `musl-dev`, `libxml2-dev`,
+  `libxslt-dev`, `python3-dev` as a throwaway `.build-deps` virtual
+  package and removes them after install, keeping the runtime image
+  small. (`libxml2` / `libxslt` stay — lxml links against them at run
+  time.) The standalone image already had this hardening.
+- **Add-on branding**: ship `icon.png` (128×128) and `logo.png`
+  (250×100) so the App Store tile and add-on detail page show real
+  artwork instead of the placeholder.
+- Restore canonical project ownership in `config.yaml`,
+  `docker-compose.example.yml`, and `README.md` (GitHub URL, install
+  badge, and GHCR image references point back to `sandervg`). Fixed the
+  Docker image name in the compose example to match the name actually
+  published by the GHCR workflow (`bose-soundtouch-bridge`).
+
 ## 1.8.2
 
 - **Improved Button Reliability**: Added a state reset (1s delay) for `last_preset` sensor. This ensures that pressing the same physical button multiple times in a row will always trigger Home Assistant automations.
